@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日待辦清單</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .task-list li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .task-list li label {
+            margin-left: 10px;
+            font-size: 16px;
+        }
+        .task-checkbox {
+            width: 20px; /* 固定核取方塊寬度 */
+            height: 20px; /* 固定核取方塊高度 */
+        }
+        .button-container {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #time {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>每日待辦清單</h1>
+
+        <ul class="task-list">
+            <li><input type="checkbox" class="task-checkbox" id="task1"><label for="task1">AUT</label></li>
+            <li><input type="checkbox" class="task-checkbox" id="task2"><label for="task2">ARC</label></li>
+            <li><input type="checkbox" class="task-checkbox" id="task3"><label for="task3">怪公</label></li>
+            <li><input type="checkbox" class="task-checkbox" id="task4"><label for="task4">日王</label></li>
+            <li><input type="checkbox" class="task-checkbox" id="task5"><label for="task5">點名</label></li>
+            <li><input type="checkbox" class="task-checkbox" id="task6"><label for="task6">復古小遊戲</label></li>
+            <li><input type="checkbox" class="task-checkbox" id="task7"><label for="task7">小遊戲</label></li>
+            <li><input type="checkbox" class="task-checkbox" id="task8"><label for="task8">一般怪公</label></li>
+        </ul>
+
+        <div class="button-container">
+            <button id="clear-btn">清除所有</button>
+        </div>
+
+        <div id="time"></div>
+    </div>
+
+    <script>
+        // 取得所有待辦事項的核取方塊
+        const taskCheckboxes = document.querySelectorAll('.task-checkbox');
+        const clearBtn = document.getElementById('clear-btn');
+
+        // 監聽每個核取方塊的變化
+        taskCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                checkAllTasksCompleted();
+            });
+        });
+
+        // 檢查是否所有任務都完成
+        function checkAllTasksCompleted() {
+            const allChecked = Array.from(taskCheckboxes).every(checkbox => checkbox.checked);
+            if (allChecked) {
+                alert("恭喜獄友又做完每日工作 該去練功囉");
+            }
+        }
+
+        // 台北時間顯示功能
+        function updateTime() {
+            const now = new Date();
+            const options = { timeZone: 'Asia/Taipei', hour12: false };
+            const timeString = now.toLocaleTimeString('zh-TW', options);
+            document.getElementById('time').textContent = `台北時間: ${timeString}`;
+
+            // 每天0點清除所有勾選的核取方塊
+            if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+                clearAllCheckboxes();
+            }
+
+            // 每天11點提醒
+            if (now.getHours() === 11 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+                alert("快要12點了 各位獄友 還敢沒做完阿?");
+            }
+        }
+
+        // 清除所有勾選的核取方塊
+        function clearAllCheckboxes() {
+            taskCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+
+        // 監聽「清除所有」按鈕的點擊事件
+        clearBtn.addEventListener('click', () => {
+            clearAllCheckboxes();
+        });
+
+        // 每秒更新時間並檢查時間條件
+        setInterval(updateTime, 1000);
+
+    </script>
+
+</body>
+</html>
