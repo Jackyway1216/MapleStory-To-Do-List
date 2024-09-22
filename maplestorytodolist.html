@@ -68,12 +68,12 @@
         <ul class="task-list">
             <li><input type="checkbox" class="task-checkbox" id="task1"><label for="task1">AUT</label></li>
             <li><input type="checkbox" class="task-checkbox" id="task2"><label for="task2">ARC</label></li>
-            <li><input type="checkbox" class="task-checkbox" id="task3"><label for="task3">怪公</label></li>
-            <li><input type="checkbox" class="task-checkbox" id="task4"><label for="task4">日王</label></li>
+            <li><input type="checkbox" class="task-checkbox" id="task3"><label for="task3">終極怪公</label></li>
+            <li><input type="checkbox" class="task-checkbox" id="task4"><label for="task4">一般怪公</label></li>
             <li><input type="checkbox" class="task-checkbox" id="task5"><label for="task5">點名</label></li>
             <li><input type="checkbox" class="task-checkbox" id="task6"><label for="task6">復古小遊戲</label></li>
             <li><input type="checkbox" class="task-checkbox" id="task7"><label for="task7">小遊戲</label></li>
-            <li><input type="checkbox" class="task-checkbox" id="task8"><label for="task8">一般怪公</label></li>
+            <li><input type="checkbox" class="task-checkbox" id="task8"><label for="task8">日王</label></li>
         </ul>
 
         <div class="button-container">
@@ -88,7 +88,7 @@
         const taskCheckboxes = document.querySelectorAll('.task-checkbox');
         const clearBtn = document.getElementById('clear-btn');
 
-        // 監聽每個核取方塊的變化
+        // 檢查每個核取方塊的變化
         taskCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', () => {
                 checkAllTasksCompleted();
@@ -103,12 +103,12 @@
             }
         }
 
-        // 台北時間顯示功能
+        // 時間顯示功能
         function updateTime() {
             const now = new Date();
             const options = { timeZone: 'Asia/Taipei', hour12: false };
             const timeString = now.toLocaleTimeString('zh-TW', options);
-            document.getElementById('time').textContent = `台北時間: ${timeString}`;
+            document.getElementById('time').textContent = `現在時間: ${timeString}`;
 
             // 每天0點清除所有勾選的核取方塊
             if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0) {
@@ -128,11 +128,11 @@
             });
         }
 
-        // 監聽「清除所有」按鈕的點擊事件
+        // 檢查「清除所有」按鈕的點擊事件
         clearBtn.addEventListener('click', () => {
             clearAllCheckboxes();
         });
-
+ 
         // 每秒更新時間並檢查時間條件
         setInterval(updateTime, 1000);
 
