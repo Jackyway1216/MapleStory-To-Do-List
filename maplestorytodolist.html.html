@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日待辦清單</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .task-list li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .task-list li label {
+            margin-left: 10px;
+            font-size: 16px;
+        }
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+        }
+        .button-container {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #time {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #555;
+        }
+        #new-task {
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>每日待辦清單</h1>
+
+        <ul class="task-list" id="task-list">
+            <li><input type="checkbox" class="task-checkbox" id="task1"><label for="task1">AUT</label><button class="delete-btn">刪除</button></li>
+            <li><input type="checkbox" class="task-checkbox" id="task2"><label for="task2">ARC</label><button class="delete-btn">刪除</button></li>
+            <li><input type="checkbox" class="task-checkbox" id="task3"><label for="task3">終極怪公</label><button class="delete-btn">刪除</button></li>
+            <li><input type="checkbox" class="task-checkbox" id="task4"><label for="task4">一般怪公</label><button class="delete-btn">刪除</button></li>
+            <li><input type="checkbox" class="task-checkbox" id="task5"><label for="task5">點名</label><button class="delete-btn">刪除</button></li>
+            <li><input type="checkbox" class="task-checkbox" id="task6"><label for="task6">復古小遊戲</label><button class="delete-btn">刪除</button></li>
+            <li><input type="checkbox" class="task-checkbox" id="task7"><label for="task7">小遊戲</label><button class="delete-btn">刪除</button></li>
+            <li><input type="checkbox" class="task-checkbox" id="task8"><label for="task8">日王</label><button class="delete-btn">刪除</button></li>
+        </ul>
+
+        <div class="button-container">
+            <input type="text" id="new-task" placeholder="新增任務">
+            <button id="add-btn">新增任務</button>
+            <button id="clear-btn">清除所有</button>
+        </div>
+
+        <div id="time"></div>
+    </div>
+
+    <script>
+        // 取得待辦事項清單元素
+        const taskList = document.getElementById('task-list');
+        const newTaskInput = document.getElementById('new-task');
+        const addBtn = document.getElementById('add-btn');
+        const clearBtn = document.getElementById('clear-btn');
+
+        // 新增任務
+        addBtn.addEventListener('click', () => {
+            const taskText = newTaskInput.value.trim();
+            if (taskText !== "") {
+                const newTask = document.createElement('li');
+                newTask.innerHTML = `<input type="checkbox" class="task-checkbox"><label>${taskText}</label><button class="delete-btn">刪除</button>`;
+                taskList.appendChild(newTask);
+                newTaskInput.value = ""; // 清空輸入框
+                addDeleteFunctionality(newTask.querySelector('.delete-btn'));
+            }
+        });
+
+        // 刪除任務功能
+        function addDeleteFunctionality(deleteBtn) {
+            deleteBtn.addEventListener('click', () => {
+                deleteBtn.parentElement.remove();
+            });
+        }
+
+        // 為現有的刪除按鈕添加功能
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            addDeleteFunctionality(button);
+        });
+
+        // 清除所有勾選的核取方塊
+        function clearAllCheckboxes() {
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+
+        // 「清除所有」按鈕點擊事件
+        clearBtn.addEventListener('click', () => {
+            clearAllCheckboxes();
+        });
+
+        // 檢查是否所有任務都完成
+        function checkAllTasksCompleted() {
+            const allChecked = Array.from(document.querySelectorAll('.task-checkbox')).every(checkbox => checkbox.checked);
+            if (allChecked) {
+                alert("恭喜獄友又做完每日工作 該去練功囉");
+            }
+        }
+
+        // 監聽每個核取方塊的變化
+        taskList.addEventListener('change', () => {
+            checkAllTasksCompleted();
+        });
+
+        // 時間顯示功能
+        function updateTime() {
+            const now = new Date();
+            const options = { timeZone: 'Asia/Taipei', hour12: false };
+            const timeString = now.toLocaleTimeString('zh-TW', options);
+            document.getElementById('time').textContent = `現在時間: ${timeString}`;
+
+            // 每天0點清除所有勾選的核取方塊
+            if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+                clearAllCheckboxes();
+            }
+
+            // 每天11點提醒
+            if (now.getHours() === 11 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+                alert("快要12點了 各位獄友 還敢沒做完阿?");
+            }
+        }
+
+        // 每秒更新時間並檢查時間條件
+        setInterval(updateTime, 1000);
+    </script>
+
+</body>
+</html>
